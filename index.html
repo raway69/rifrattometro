@@ -698,13 +698,19 @@
       const fgBrix = brixCorrected;
       const fgCorrected = 1.000019 + (0.3929 * ogBrix) - (0.00478 * fgBrix) - (0.0002 * ogBrix * ogBrix);
 
-      if (fgCorrected >= ogSG) {
-        showError('La FG non può essere maggiore o uguale all\'OG. Controlla i valori inseriti.');
-        return;
-      }
-
       const att = ((ogSG - fgCorrected) / (ogSG - 1.000)) * 100;
       const abv = (ogSG - fgCorrected) * 131.25;
+
+      // Avviso se i valori sembrano anomali (FG > OG) ma mostriamo comunque
+      if (fgCorrected >= ogSG) {
+        document.getElementById('res_fg').style.color = 'var(--red)';
+        document.getElementById('res_fg_section').querySelector('.result-sub').textContent =
+          '⚠️ Valore anomalo — verifica le letture';
+      } else {
+        document.getElementById('res_fg').style.color = 'var(--gold)';
+        document.getElementById('res_fg_section').querySelector('.result-sub').textContent =
+          'Formula Novotný';
+      }
 
       document.getElementById('res_fg').textContent = fgCorrected.toFixed(4);
       document.getElementById('res_att').textContent = att.toFixed(1) + '%';
